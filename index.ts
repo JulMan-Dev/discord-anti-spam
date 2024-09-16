@@ -1,32 +1,32 @@
-import Discord from "discord.js";
+import Discord, { PermissionFlags, PermissionResolvable } from "discord.js";
 import { EventEmitter } from "events";
 
 /**
  * @callback IgnoreMemberFunction
  * @param {Discord.GuildMember} member The member to check
  * @returns {boolean} Whether the member should be ignored
-*/
+ */
 type IgnoreMemberFunction = (member: Discord.GuildMember) => boolean;
 
 /**
  * @callback IgnoreRoleFunction
  * @param {Discord.Collection<Discord.Snowflake, Discord.Role>} role The role to check
  * @returns {boolean} Whether the user should be ignored
-*/
+ */
 type IgnoreRoleFunction = (role: Discord.Role) => boolean;
 
 /**
  * @callback IgnoreGuildFunction
  * @param {Discord.Guild} guild The guild to check
  * @returns {boolean} Whether the guild should be ignored
-*/
+ */
 type IgnoreGuildFunction = (guild: Discord.Guild) => boolean;
 
 /**
  * @callback IgnoreChannelFunction
  * @param {Discord.Channel} channel The channel to check
  * @returns {boolean} Whether the channel should be ignored
-*/
+ */
 type IgnoreChannelFunction = (channel: Discord.Channel) => boolean;
 
 /**
@@ -109,7 +109,7 @@ interface AntiSpamClientOptions {
   ignoredRoles?: (Discord.Snowflake | string)[] | IgnoreRoleFunction;
   ignoredGuilds?: Discord.Snowflake[] | IgnoreGuildFunction;
   ignoredChannels?: Discord.Snowflake[] | IgnoreChannelFunction;
-  ignoredPermissions?: Discord.PermissionsString[];
+  ignoredPermissions?: Discord.PermissionFlags[];
   ignoreBots?: boolean;
   warnEnabled?: boolean;
   kickEnabled?: boolean;
@@ -194,57 +194,7 @@ export default class AntiSpamClient extends EventEmitter {
     ignoredRoles: (Discord.Snowflake | string)[] | IgnoreRoleFunction;
     ignoredGuilds: Discord.Snowflake[] | IgnoreGuildFunction;
     ignoredChannels: Discord.Snowflake[] | IgnoreChannelFunction;
-    ignoredPermissions: (
-      "AddReactions" |
-      "Administrator" |
-      "AttachFiles" |
-      "BanMembers" |
-      "ChangeNickname" |
-      "Connect" |
-      "CreateEvents" |
-      "CreateGuildExpressions" |
-      "CreateInstantInvite" |
-      "CreatePrivateThreads" |
-      "CreatePublicThreads" |
-      "DeafenMembers" |
-      "EmbedLinks" |
-      "KickMembers" |
-      "ManageChannels" |
-      "ManageEmojisAndStickers" |
-      "ManageEvents" |
-      "ManageGuild" |
-      "ManageGuildExpressions" |
-      "ManageMessages" |
-      "ManageNicknames" |
-      "ManageRoles" |
-      "ManageThreads" |
-      "ManageWebhooks" |
-      "MentionEveryone" |
-      "ModerateMembers" |
-      "MoveMembers" |
-      "MuteMembers" |
-      "PrioritySpeaker" |
-      "ReadMessageHistory" |
-      "RequestToSpeak" |
-      "SendMessages" |
-      "SendMessagesInThreads" |
-      "SendPolls" |
-      "SendTTSMessages" |
-      "SendVoiceMessages" |
-      "Speak" |
-      "Stream" |
-      "UseApplicationCommands" |
-      "UseEmbeddedActivities" |
-      "UseExternalEmojis" |
-      "UseExternalSounds" |
-      "UseExternalStickers" |
-      "UseSoundboard" |
-      "UseVAD" |
-      "ViewAuditLog" |
-      "ViewChannel" |
-      "ViewCreatorMonetizationAnalytics" |
-      "ViewGuildInsights"
-    )[];
+    ignoredPermissions: Discord.PermissionFlags[];
     ignoreBots: boolean;
     warnEnabled: boolean;
     ipwarnEnabled: boolean;
@@ -290,71 +240,50 @@ export default class AntiSpamClient extends EventEmitter {
 
       unMuteTime: (options.unMuteTime ?? 5) * 60_000 || 300_000,
 
-      modLogsChannel: options.modLogsChannel ||
-        "mod-logs",
+      modLogsChannel: options.modLogsChannel || "mod-logs",
       modLogsEnabled: options.modLogsEnabled || false,
-      modLogsMode: options.modLogsMode ||
-        "embed",
+      modLogsMode: options.modLogsMode || "embed",
 
-      warnMessage: options.warnMessage ||
-        "{@user}, Please stop spamming.",
+      warnMessage: options.warnMessage || "{@user}, Please stop spamming.",
       muteMessage:
-        options.muteMessage ||
-        "**{user_tag}** has been muted for spamming.",
+        options.muteMessage || "**{user_tag}** has been muted for spamming.",
       kickMessage:
-        options.kickMessage ||
-        "**{user_tag}** has been kicked for spamming.",
+        options.kickMessage || "**{user_tag}** has been kicked for spamming.",
       banMessage:
-        options.banMessage ||
-        "**{user_tag}** has been banned for spamming.",
+        options.banMessage || "**{user_tag}** has been banned for spamming.",
 
       actionInEmbed: options.actionInEmbed || false,
-      actionEmbedIn: options.actionEmbedIn ||
-        "channel",
-      actionEmbedColor: options.actionEmbedColor ||
-        "#ff0000",
+      actionEmbedIn: options.actionEmbedIn || "channel",
+      actionEmbedColor: options.actionEmbedColor || "#ff0000",
 
-      warnEmbedTitle: options.warnEmbedTitle ||
-        "User have been warned.",
-      kickEmbedTitle: options.kickEmbedTitle ||
-        "User have been kicked.",
-      muteEmbedTitle: options.muteEmbedTitle ||
-        "User have been muted.",
-      banEmbedTitle: options.banEmbedTitle ||
-        "User have been banned.",
+      warnEmbedTitle: options.warnEmbedTitle || "User have been warned.",
+      kickEmbedTitle: options.kickEmbedTitle || "User have been kicked.",
+      muteEmbedTitle: options.muteEmbedTitle || "User have been muted.",
+      banEmbedTitle: options.banEmbedTitle || "User have been banned.",
 
       embedTitleIconURL:
         options.embedTitleIconURL ||
         "https://raw.githubusercontent.com/Michael-J-Scofield/discord-anti-spam/master/docs/img/antispam.png",
 
       warnEmbedDescription:
-        options.warnEmbedDescription ||
-        "You have been warned for spamming.",
+        options.warnEmbedDescription || "You have been warned for spamming.",
       kickEmbedDescription:
-        options.kickEmbedDescription ||
-        "You have been kicked for spamming.",
+        options.kickEmbedDescription || "You have been kicked for spamming.",
       muteEmbedDescription:
-        options.muteEmbedDescription ||
-        "You have been muted for spamming.",
+        options.muteEmbedDescription || "You have been muted for spamming.",
       banEmbedDescription:
-        options.banEmbedDescription ||
-        "You have been banned for spamming.",
+        options.banEmbedDescription || "You have been banned for spamming.",
 
-      warnEmbedFooter: options.warnEmbedFooter ||
-        "You have been warned.",
-      kickEmbedFooter: options.kickEmbedFooter ||
-        "You have been kicked.",
-      muteEmbedFooter: options.muteEmbedFooter ||
-        "You have been muted.",
-      banEmbedFooter: options.banEmbedFooter ||
-        "You have been banned.",
+      warnEmbedFooter: options.warnEmbedFooter || "You have been warned.",
+      kickEmbedFooter: options.kickEmbedFooter || "You have been kicked.",
+      muteEmbedFooter: options.muteEmbedFooter || "You have been muted.",
+      banEmbedFooter: options.banEmbedFooter || "You have been banned.",
 
       embedFooterIconURL:
         options.embedFooterIconURL ||
         "https://raw.githubusercontent.com/Michael-J-Scofield/discord-anti-spam/master/docs/img/antispam.png",
 
-      errorMessages:
-        options.errorMessages ?? true,
+      errorMessages: options.errorMessages ?? true,
       kickErrorMessage:
         options.kickErrorMessage ||
         "Could not kick **{user_tag}** because of improper permissions.",
@@ -372,22 +301,17 @@ export default class AntiSpamClient extends EventEmitter {
       ignoredPermissions: options.ignoredPermissions || [],
       ignoreBots: options.ignoreBots ?? true,
 
-      warnEnabled:
-        options.warnEnabled ?? true,
-      ipwarnEnabled:
-        options.ipwarnEnabled ?? false,
-      kickEnabled:
-        options.kickEnabled ?? true,
-      muteEnabled:
-        options.muteEnabled ?? true,
+      warnEnabled: options.warnEnabled ?? true,
+      ipwarnEnabled: options.ipwarnEnabled ?? false,
+      kickEnabled: options.kickEnabled ?? true,
+      muteEnabled: options.muteEnabled ?? true,
       banEnabled: options.banEnabled ?? true,
 
       deleteMessagesAfterBanForPastDays:
         options.deleteMessagesAfterBanForPastDays || 1,
       verbose: options.verbose || false,
       debug: options.debug || false,
-      removeMessages:
-        options.removeMessages ?? true,
+      removeMessages: options.removeMessages ?? true,
 
       removeBotMessages: options.removeBotMessages || false,
       removeBotMessagesAfter: options.removeBotMessagesAfter || 2000,
@@ -414,14 +338,20 @@ export default class AntiSpamClient extends EventEmitter {
    * @param {Discord.Message} message The Discord api message.
    * @returns {string}
    */
-  format(string: string, message: { author: { toString: () => string; tag: string; }; guild: { name: string; }; }): string {
+  format(
+    string: string,
+    message: {
+      author: { toString: () => string; tag: string };
+      guild: { name: string };
+    }
+  ): string {
     if (typeof string === "string") {
       return string
         .replace(/{@user}/g, message.author.toString())
         .replace(/{user_tag}/g, message.author.tag)
         .replace(/{server_name}/g, message.guild.name);
     }
-    return '';
+    return "";
   }
 
   /**
@@ -439,60 +369,64 @@ export default class AntiSpamClient extends EventEmitter {
           .setTitle(this.options[`${action}Title`])
           .setThumbnail(this.options.embedTitleIconURL)
           .setDescription(
-            this.format(
-              this.options[`${action}EmbedDescription`],
-              {
-                author: {
-                  toString: () => message.author.toString(),
-                  tag: message.author.tag
-                },
-                guild: message.guild ? { name: message.guild.name } : { name: "No Guild" }
-              }
-            )
+            this.format(this.options[`${action}EmbedDescription`], {
+              author: {
+                toString: () => message.author.toString(),
+                tag: message.author.tag,
+              },
+              guild: message.guild
+                ? { name: message.guild.name }
+                : { name: "No Guild" },
+            })
           )
           .setFooter({
-            text: this.format(
-              this.options[`${action}EmbedFooter`],
-              {
-                author: {
-                  toString: () => message.author.toString(),
-                  tag: message.author.tag
-                },
-                guild: message.guild ? { name: message.guild.name } : { name: "No Guild" }
-              }
-            ),
-            iconURL: this.options.embedFooterIconURL
+            text: this.format(this.options[`${action}EmbedFooter`], {
+              author: {
+                toString: () => message.author.toString(),
+                tag: message.author.tag,
+              },
+              guild: message.guild
+                ? { name: message.guild.name }
+                : { name: "No Guild" },
+            }),
+            iconURL: this.options.embedFooterIconURL,
           });
-        message.channel.send({ embeds: [embed] });
+        if (message.channel.type === Discord.ChannelType.GuildText) {
+          message.channel.send({ embeds: [embed] });
+        } else {
+          if (this.options.verbose) {
+            console.error(
+              "DAntiSpam (sendActionMessage#noChannel#399): The message channel is not a text channel."
+            );
+          }
+        }
       } else {
         const embed = new Discord.EmbedBuilder()
           .setColor(this.options.actionEmbedColor as Discord.ColorResolvable)
           .setTitle(this.options[`${action}Title`])
           .setThumbnail(this.options.embedTitleIconURL)
           .setDescription(
-            this.format(
-              this.options[`${action}EmbedDescription`],
-              {
-                author: {
-                  toString: () => message.author.toString(),
-                  tag: message.author.tag
-                },
-                guild: message.guild ? { name: message.guild.name } : { name: "No Guild" }
-              }
-            )
+            this.format(this.options[`${action}EmbedDescription`], {
+              author: {
+                toString: () => message.author.toString(),
+                tag: message.author.tag,
+              },
+              guild: message.guild
+                ? { name: message.guild.name }
+                : { name: "No Guild" },
+            })
           )
           .setFooter({
-            text: this.format(
-              this.options[`${action}EmbedFooter`],
-              {
-                author: {
-                  toString: () => message.author.toString(),
-                  tag: message.author.tag
-                },
-                guild: message.guild ? { name: message.guild.name } : { name: "No Guild" }
-              }
-            ),
-            iconURL: this.options.embedFooterIconURL
+            text: this.format(this.options[`${action}EmbedFooter`], {
+              author: {
+                toString: () => message.author.toString(),
+                tag: message.author.tag,
+              },
+              guild: message.guild
+                ? { name: message.guild.name }
+                : { name: "No Guild" },
+            }),
+            iconURL: this.options.embedFooterIconURL,
           });
         message.author.send({ embeds: [embed] });
       }
@@ -501,171 +435,208 @@ export default class AntiSpamClient extends EventEmitter {
         const messageContentObj = {
           author: {
             toString: () => message.author.toString(),
-            tag: message.author.tag
+            tag: message.author.tag,
           },
           guild: {
-            name: message.guild ? message.guild.name : "No Guild"
-          }
+            name: message.guild ? message.guild.name : "No Guild",
+          },
         };
-        const formattedMessage = this.format(this.options.warnMessage, messageContentObj);
-        message.channel
-          .send(formattedMessage)
-          .catch((e) => {
-            if (this.options.verbose) {
-              console.error(`AntiSpam (warnUser#sendSuccessMessage)[341]: ${e.message}`);
-            }
-          });
+        const formattedMessage = this.format(
+          this.options.warnMessage,
+          messageContentObj
+        );
+        if (message.channel.type === Discord.ChannelType.GuildText) {
+          message.channel.send(formattedMessage);
+        } else {
+          if (this.options.verbose) {
+            console.error(
+              "DAntiSpam (sendActionMessage#noChannel#399): The message channel is not a text channel."
+            );
+          }
+        }
         return true;
       } else if (action == "kick") {
         const messageContentObj = {
           author: {
             toString: () => message.author.toString(),
-            tag: message.author.tag
+            tag: message.author.tag,
           },
           guild: {
-            name: message.guild ? message.guild.name : "No Guild"
-          }
+            name: message.guild ? message.guild.name : "No Guild",
+          },
         };
-        const formattedMessage = this.format(this.options.kickMessage, messageContentObj);
-        message.channel
-          .send(formattedMessage)
-          .catch((e) => {
-            if (this.options.verbose) {
-              console.error(`AntiSpam (kickUser#sendSuccessMessage)[352]: ${e.message}`);
-            }
-          });
+        const formattedMessage = this.format(
+          this.options.kickMessage,
+          messageContentObj
+        );
+        if (message.channel.type === Discord.ChannelType.GuildText) {
+          message.channel.send(formattedMessage);
+        } else {
+          if (this.options.verbose) {
+            console.error(
+              "DAntiSpam (sendActionMessage#noChannel#477): The message channel is not a text channel."
+            );
+          }
+        }
+
         return true;
       } else if (action == "mute") {
         const messageContentObj = {
           author: {
             toString: () => message.author.toString(),
-            tag: message.author.tag
+            tag: message.author.tag,
           },
           guild: {
-            name: message.guild ? message.guild.name : "No Guild"
-          }
+            name: message.guild ? message.guild.name : "No Guild",
+          },
         };
-        const formattedMessage = this.format(this.options.muteMessage, messageContentObj);
-        message.channel
-          .send(formattedMessage)
-          .catch((e) => {
-            if (this.options.verbose) {
-              console.error(`AntiSpam (muteUser#sendSuccessMessage)[363]: ${e.message}`);
-            }
-          });
+        const formattedMessage = this.format(
+          this.options.muteMessage,
+          messageContentObj
+        );
+        if (message.channel.type === Discord.ChannelType.GuildText) {
+          message.channel.send(formattedMessage);
+        } else {
+          if (this.options.verbose) {
+            console.error(
+              "DAntiSpam (sendActionMessage#noChannel#502): The message channel is not a text channel."
+            );
+          }
+        }
         return true;
       } else if (action == "ban") {
         const messageContentObj = {
           author: {
             toString: () => message.author.toString(),
-            tag: message.author.tag
+            tag: message.author.tag,
           },
           guild: {
-            name: message.guild ? message.guild.name : "No Guild"
-          }
+            name: message.guild ? message.guild.name : "No Guild",
+          },
         };
-        const formattedMessage = this.format(this.options.banMessage, messageContentObj);
-        message.channel
-          .send(formattedMessage)
-          .catch((e) => {
-            if (this.options.verbose) {
-              console.error(`AntiSpam (banUser#sendSuccessMessage)[374]: ${e.message}`);
-            }
-          });
+        const formattedMessage = this.format(
+          this.options.banMessage,
+          messageContentObj
+        );
+        if (message.channel.type === Discord.ChannelType.GuildText) {
+          message.channel.send(formattedMessage);
+        } else {
+          if (this.options.verbose) {
+            console.error(
+              "DAntiSpam (sendActionMessage#noChannel#526): The message channel is not a text channel."
+            );
+          }
+        }
       }
     } else if (action == "warn") {
       const context = {
         author: {
           toString: () => message.author.toString(),
-          tag: message.author.tag
+          tag: message.author.tag,
         },
         guild: {
-          name: message.guild ? message.guild.name : "No Guild"
-        }
+          name: message.guild ? message.guild.name : "No Guild",
+        },
       };
       // Ensure to use the correct property name here. Assuming it's `warnMessage`
       const formattedMessage = this.format(this.options.warnMessage, context);
       // Send the formatted message to the author
-      message.author.send(formattedMessage)
-        .catch((e) => {
-          if (this.options.verbose) {  // Assuming `this.options.verbose` is the correct path
-            console.error(`AntiSpam (warnUser#sendSuccessMessage)[386]: ${e.message}`);
-          }
-        });
+      message.author.send(formattedMessage).catch((e) => {
+        if (this.options.verbose) {
+          // Assuming `this.options.verbose` is the correct path
+          console.error(
+            `AntiSpam (warnUser#sendSuccessMessage)[386]: ${e.message}`
+          );
+        }
+      });
       return true;
     } else if (action == "kick") {
       const context = {
         author: {
           toString: () => message.author.toString(),
-          tag: message.author.tag
+          tag: message.author.tag,
         },
         guild: {
-          name: message.guild ? message.guild.name : "No Guild"
-        }
+          name: message.guild ? message.guild.name : "No Guild",
+        },
       };
       // Ensure to use the correct property name here. Assuming it's `kickMessage`
       const formattedMessage = this.format(this.options.kickMessage, context);
       // Send the formatted message to the author
-      message.author.send(formattedMessage)
-        .catch((e) => {
-          if (this.options.verbose) {  // Assuming `this.options.verbose` is the correct path
-            console.error(`AntiSpam (kickUser#sendSuccessMessage)[397]: ${e.message}`);
-          }
-        });
+      message.author.send(formattedMessage).catch((e) => {
+        if (this.options.verbose) {
+          // Assuming `this.options.verbose` is the correct path
+          console.error(
+            `AntiSpam (kickUser#sendSuccessMessage)[397]: ${e.message}`
+          );
+        }
+      });
       return true;
     } else if (action == "mute") {
       const context = {
         author: {
           toString: () => message.author.toString(),
-          tag: message.author.tag
+          tag: message.author.tag,
         },
         guild: {
-          name: message.guild ? message.guild.name : "No Guild"
-        }
+          name: message.guild ? message.guild.name : "No Guild",
+        },
       };
       // Ensure to use the correct property name here. Assuming it's `muteMessage`
       const formattedMessage = this.format(this.options.muteMessage, context);
       // Send the formatted message to the author
-      message.author.send(formattedMessage)
-        .catch((e) => {
-          if (this.options.verbose) {  // Assuming `this.options.verbose` is the correct path
-            console.error(`AntiSpam (muteUser#sendSuccessMessage)[363]: ${e.message}`);
-          }
-        });
+      message.author.send(formattedMessage).catch((e) => {
+        if (this.options.verbose) {
+          // Assuming `this.options.verbose` is the correct path
+          console.error(
+            `AntiSpam (muteUser#sendSuccessMessage)[363]: ${e.message}`
+          );
+        }
+      });
       return true;
     } else if (action == "ban") {
       const context = {
         author: {
           toString: () => message.author.toString(),
-          tag: message.author.tag
+          tag: message.author.tag,
         },
         guild: {
-          name: message.guild ? message.guild.name : "No Guild"
-        }
+          name: message.guild ? message.guild.name : "No Guild",
+        },
       };
       // Ensure to use the correct property name here. Assuming it's `banMessage`
       const formattedMessage = this.format(this.options.banMessage, context);
       // Send the formatted message to the author
-      message.author.send(formattedMessage)
-        .catch((e) => {
-          if (this.options.verbose) {  // Assuming `this.options.verbose` is the correct path
-            console.error(`AntiSpam (banUser#sendSuccessMessage)[419]: ${e.message}`);
-          }
-        });
+      message.author.send(formattedMessage).catch((e) => {
+        if (this.options.verbose) {
+          // Assuming `this.options.verbose` is the correct path
+          console.error(
+            `AntiSpam (banUser#sendSuccessMessage)[419]: ${e.message}`
+          );
+        }
+      });
     }
   }
 
-  private getGuildTextBasedChannel(client: Discord.Client, msg: Discord.Message, modLogsChannel: string): Discord.TextChannel | Discord.ThreadChannel | undefined {
+  private getGuildTextBasedChannel(
+    client: Discord.Client,
+    msg: Discord.Message,
+    modLogsChannel: string
+  ): Discord.TextChannel | Discord.ThreadChannel | undefined {
     const channelById = client.channels.cache.get(modLogsChannel);
 
     // Check if the channel is a Text Channel or Thread Channel
-    if (channelById?.type === Discord.ChannelType.GuildText && channelById.isTextBased()) {
+    if (
+      channelById?.type === Discord.ChannelType.GuildText &&
+      channelById.isTextBased()
+    ) {
       return channelById as Discord.TextChannel | Discord.ThreadChannel;
     }
 
     const channelByName = msg.guild?.channels.cache.find(
       (channel) =>
-        channel.name === modLogsChannel && channel.type === Discord.ChannelType.GuildText
+        channel.name === modLogsChannel &&
+        channel.type === Discord.ChannelType.GuildText
     );
 
     if (channelByName?.isTextBased()) {
@@ -674,7 +645,8 @@ export default class AntiSpamClient extends EventEmitter {
 
     const channelByIdInGuild = msg.guild?.channels.cache.find(
       (channel) =>
-        channel.id === modLogsChannel && channel.type === Discord.ChannelType.GuildText
+        channel.id === modLogsChannel &&
+        channel.type === Discord.ChannelType.GuildText
     );
 
     if (channelByIdInGuild?.isTextBased()) {
@@ -692,11 +664,19 @@ export default class AntiSpamClient extends EventEmitter {
    * @param {Discord.Client} client The Discord api client.
    * @returns {Promise<void>} Returns a promise of void.
    */
-  async log(msg: Discord.Message, action: string, client: Discord.Client): Promise<void> {
+  async log(
+    msg: Discord.Message,
+    action: string,
+    client: Discord.Client
+  ): Promise<void> {
     if (this.options.modLogsEnabled) {
-      const modLogChannel = this.getGuildTextBasedChannel(client, msg, this.options.modLogsChannel);
+      const modLogChannel = this.getGuildTextBasedChannel(
+        client,
+        msg,
+        this.options.modLogsChannel
+      );
       // const modLogChannel: Discord.TextChannel | Discord.ThreadChannel =
-        client.channels.cache.get(this.options.modLogsChannel) ||
+      client.channels.cache.get(this.options.modLogsChannel) ||
         msg.guild?.channels.cache.find(
           (channel) =>
             channel.name == this.options.modLogsChannel &&
@@ -759,10 +739,15 @@ export default class AntiSpamClient extends EventEmitter {
    * @param {Discord.Client} client The Discord api client.
    * @returns {Promise<void>} The promise of the deletion.
    */
-  async clearSpamMessages(messages: CachedMessage[], client: Discord.Client): Promise<void> {
+  async clearSpamMessages(
+    messages: CachedMessage[],
+    client: Discord.Client
+  ): Promise<void> {
     try {
       messages.forEach((message) => {
-        const channel = client.channels.cache.get(message.channelID) as Discord.TextBasedChannel;
+        const channel = client.channels.cache.get(
+          message.channelID
+        ) as Discord.TextBasedChannel;
         if (channel) {
           const msg = channel.messages.cache.get(message.messageID);
           if (msg?.deletable)
@@ -791,7 +776,11 @@ export default class AntiSpamClient extends EventEmitter {
    * @param {CachedMessage[]} [spamMessages] The spam messages.
    * @returns {Promise<boolean>} Whether the member could be banned.
    */
-  async banUser(message: Discord.Message, member: Discord.GuildMember, spamMessages: CachedMessage[]): Promise<boolean> {
+  async banUser(
+    message: Discord.Message,
+    member: Discord.GuildMember,
+    spamMessages: CachedMessage[]
+  ): Promise<boolean> {
     if (this.options.removeMessages && spamMessages) {
       this.clearSpamMessages(spamMessages, message.client);
     }
@@ -808,15 +797,29 @@ export default class AntiSpamClient extends EventEmitter {
       if (this.options.errorMessages) {
         const { guild } = message;
         if (guild) {
-          const send = message.channel
-            .send(this.format(this.options.banErrorMessage, { ...message, guild }))
-            .catch((e) => {
-              if (this.options.verbose) {
-                console.error(`DAntiSpam (banUser#sendMissingPermMessage): ${e.message}`);
-              }
-            });
+          if (message.channel.type === Discord.ChannelType.GuildText) {
+            const send = message.channel
+              .send(
+                this.format(this.options.banErrorMessage, { ...message, guild })
+              )
+              .catch((e) => {
+                if (this.options.verbose) {
+                  console.error(
+                    `DAntiSpam (banUser#sendMissingPermMessage): ${e.message}`
+                  );
+                }
+              });
+          } else {
+            if (this.options.verbose) {
+              console.error(
+                `DAntiSpam (banUser#sendMissingPermMessage): The message channel is not a text channel.`
+              );
+            }
+          }
         } else if (this.options.verbose) {
-          console.error(`DAntiSpam (banUser#sendMissingPermMessage): Guild is null.`);
+          console.error(
+            `DAntiSpam (banUser#sendMissingPermMessage): Guild is null.`
+          );
         }
       }
       return false;
@@ -825,26 +828,37 @@ export default class AntiSpamClient extends EventEmitter {
       await message.member
         .ban({
           reason: "Spamming!",
-          deleteMessageSeconds: 60 * 60 * 24 * this.options.deleteMessagesAfterBanForPastDays
+          deleteMessageSeconds:
+            60 * 60 * 24 * this.options.deleteMessagesAfterBanForPastDays,
         })
         .catch((e) => {
           if (this.options.errorMessages) {
             const messageDetails = {
               author: {
                 toString: () => message.author.toString(),
-                tag: message.author.tag
+                tag: message.author.tag,
               },
               guild: {
-                name: message.guild ? message.guild.name : "No Guild"
-              }
+                name: message.guild ? message.guild.name : "No Guild",
+              },
             };
-            message.channel
-              .send(this.format(this.options.banErrorMessage, messageDetails))
-              .catch((e) => {
-                if (this.options.verbose) {
-                  console.error(`DAntiSpam (banUser#sendSuccessMessage): ${e.message}`);
-                }
-              });
+            if (message.channel.type === Discord.ChannelType.GuildText) {
+              message.channel
+                .send(this.format(this.options.banErrorMessage, messageDetails))
+                .catch((e) => {
+                  if (this.options.verbose) {
+                    console.error(
+                      `DAntiSpam (banUser#sendSuccessMessage): ${e.message}`
+                    );
+                  }
+                });
+            } else {
+              if (this.options.verbose) {
+                console.error(
+                  `DAntiSpam (banUser#sendSuccessMessage): The message channel is not a text channel.`
+                );
+              }
+            }
           }
         });
     }
@@ -864,7 +878,11 @@ export default class AntiSpamClient extends EventEmitter {
    * @param {CachedMessage[]} [spamMessages] The spam messages.
    * @returns {Promise<boolean>} Whether the member could be muted.
    */
-  async muteUser(message: Discord.Message, member: Discord.GuildMember, spamMessages: CachedMessage[]): Promise<boolean> {
+  async muteUser(
+    message: Discord.Message,
+    member: Discord.GuildMember,
+    spamMessages: CachedMessage[]
+  ): Promise<boolean> {
     if (this.options.removeMessages && spamMessages) {
       this.clearSpamMessages(spamMessages, message.client);
     }
@@ -876,7 +894,7 @@ export default class AntiSpamClient extends EventEmitter {
         Discord.PermissionFlagsBits.ModerateMembers
       ) &&
       message.guild.members.me.roles.highest.position >
-      (message.member?.roles.highest?.position ?? -1) &&
+        (message.member?.roles.highest?.position ?? -1) &&
       message.member?.id !== message.guild.ownerId;
     if (!userCanBeMuted) {
       if (this.options.verbose) {
@@ -888,21 +906,31 @@ export default class AntiSpamClient extends EventEmitter {
         const messageContext = {
           author: {
             toString: () => message.author.toString(),
-            tag: message.author.tag
+            tag: message.author.tag,
           },
           guild: {
-            name: message.guild ? message.guild.name : "No Guild"
-          }
+            name: message.guild ? message.guild.name : "No Guild",
+          },
         };
         // Invoking this.format function correctly with the desired error message and context.
         // Note: this.options.muteErrorMessage should contain the key to your error message template.
-        await message.channel
-          .send(this.format(this.options.muteErrorMessage, messageContext))
-          .catch((e) => {
-            if (this.options.verbose) {
-              console.log(`DAntiSpam (muteUser#sendMissingPermMessage): ${e.message}`);
-            }
-          });
+        if (message.channel.type === Discord.ChannelType.GuildText) {
+          await message.channel
+            .send(this.format(this.options.muteErrorMessage, messageContext))
+            .catch((e) => {
+              if (this.options.verbose) {
+                console.log(
+                  `DAntiSpam (muteUser#sendMissingPermMessage): ${e.message}`
+                );
+              }
+            });
+        } else {
+          if (this.options.verbose) {
+            console.log(
+              `DAntiSpam (muteUser#sendMissingPermMessage): The message channel is not a text channel.`
+            );
+          }
+        }
       }
       return false;
     }
@@ -925,7 +953,11 @@ export default class AntiSpamClient extends EventEmitter {
    * @param {CachedMessage[]} [spamMessages] The spam messages.
    * @returns {Promise<boolean>} Whether the member could be kicked.
    */
-  async kickUser(message: Discord.Message, member: Discord.GuildMember, spamMessages: CachedMessage[]): Promise<boolean> {
+  async kickUser(
+    message: Discord.Message,
+    member: Discord.GuildMember,
+    spamMessages: CachedMessage[]
+  ): Promise<boolean> {
     if (this.options.removeMessages && spamMessages) {
       this.clearSpamMessages(spamMessages, message.client);
     }
@@ -943,21 +975,33 @@ export default class AntiSpamClient extends EventEmitter {
         const messageContext = {
           author: {
             toString: () => message.author.toString(),
-            tag: message.author.tag
+            tag: message.author.tag,
           },
           guild: {
-            name: message.guild ? message.guild.name : "No Guild"
-          }
+            name: message.guild ? message.guild.name : "No Guild",
+          },
         };
+
+        if (message.channel.type === Discord.ChannelType.GuildText) {
+          await message.channel
+            .send(this.format(this.options.muteErrorMessage, messageContext))
+            .catch((e) => {
+              if (this.options.verbose) {
+                console.log(
+                  `DAntiSpam (kickUser#sendMissingPermMessage): ${e.message}`
+                );
+              }
+            });
+        } else {
+          if (this.options.verbose) {
+            console.log(
+              `DAntiSpam (kickUser#sendMissingPermMessage): The message channel is not a text channel.`
+            );
+          }
+        }
+
         // Invoking this.format function correctly with the desired error message and context.
         // Note: this.options.muteErrorMessage should contain the key to your error message template.
-        await message.channel
-          .send(this.format(this.options.muteErrorMessage, messageContext))
-          .catch((e) => {
-            if (this.options.verbose) {
-              console.log(`DAntiSpam (kickUser#sendMissingPermMessage): ${e.message}`);
-            }
-          });
       }
       return false;
     }
@@ -978,7 +1022,11 @@ export default class AntiSpamClient extends EventEmitter {
    * @param {CachedMessage[]} [spamMessages] The spam messages.
    * @returns {Promise<boolean>} Whether the member could be warned.
    */
-  async warnUser(message: Discord.Message, member: Discord.GuildMember, spamMessages: CachedMessage[]): Promise<boolean> {
+  async warnUser(
+    message: Discord.Message,
+    member: Discord.GuildMember,
+    spamMessages: CachedMessage[]
+  ): Promise<boolean> {
     if (this.options.removeMessages && spamMessages) {
       this.clearSpamMessages(spamMessages, message.client);
     }
@@ -1012,7 +1060,9 @@ export default class AntiSpamClient extends EventEmitter {
 
     const isMemberIgnored =
       typeof options.ignoredMembers === "function"
-        ? message.member ? options.ignoredMembers(message.member) : false
+        ? message.member
+          ? options.ignoredMembers(message.member)
+          : false
         : options.ignoredMembers.includes(message.author.id);
 
     if (isMemberIgnored) return false;
@@ -1033,19 +1083,21 @@ export default class AntiSpamClient extends EventEmitter {
       message.member || (await message.guild.members.fetch(message.author));
 
     const memberHasIgnoredRoles = (
-      member: { roles: { cache: Discord.Collection<Discord.Snowflake, Discord.Role> } },
+      member: {
+        roles: { cache: Discord.Collection<Discord.Snowflake, Discord.Role> };
+      },
       options: AntiSpamClientOptions
     ): boolean => {
       if (!options.ignoredRoles) {
         return false;
       }
 
-      if (typeof options.ignoredRoles === 'function') {
+      if (typeof options.ignoredRoles === "function") {
         const ignoredRolesFunction = options.ignoredRoles as IgnoreRoleFunction;
-        return member.roles.cache.some(role => ignoredRolesFunction(role));
+        return member.roles.cache.some((role) => ignoredRolesFunction(role));
       } else {
         const ignoredRoleIds = options.ignoredRoles as Discord.Snowflake[];
-        return ignoredRoleIds.some(roleId => member.roles.cache.has(roleId));
+        return ignoredRoleIds.some((roleId) => member.roles.cache.has(roleId));
       }
     };
     if (memberHasIgnoredRoles(member, options)) return false;
@@ -1057,7 +1109,9 @@ export default class AntiSpamClient extends EventEmitter {
     // if (memberHasIgnoredRoles) return false;
 
     if (
-      options.ignoredPermissions.some((permission) =>
+      options.ignoredPermissions.some((permission: PermissionFlags) =>
+        // @ts-ignore
+        // ! Ignore as the permission flags is always correct by typing
         member.permissions.has(permission)
       )
     )
@@ -1081,18 +1135,25 @@ export default class AntiSpamClient extends EventEmitter {
       (m) =>
         m.content === message.content &&
         m.sentTimestamp >
-        currentMessage.sentTimestamp - options.maxDuplicatesInterval
+          currentMessage.sentTimestamp - options.maxDuplicatesInterval
     );
     if (this.options.ipwarnEnabled == true) {
       const regex = /([0-9]{1,3}\.){3}[0-9]{1,3}/;
       if (message.content.match(regex)) {
         message.delete();
-        message.channel.send(`${message.author} Don't post IP's in chat!`);
-      };
+        if (message.channel.type === Discord.ChannelType.GuildText) {
+          message.channel.send(`${message.author} Don't post IP's in chat!`);
+        } else {
+          if (this.options.verbose) {
+            console.error(
+              "DAntiSpam (sendActionMessage#noChannel#399): The message channel is not a text channel."
+            );
+          }
+        }
+      }
     } else {
       return false;
-    };
-
+    }
 
     /**
      * Duplicate messages sent before the threshold is triggered

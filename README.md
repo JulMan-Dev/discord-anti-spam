@@ -61,7 +61,7 @@ If you have any bugs or trouble setting the module up, feel free to open an issu
 
 ## 📝 License
 
-Copyright © 2019 [Michael-J-Scofield](https://github.com/Michael-J-Scofield)<br />
+Copyright © 2024 [Michael-J-Scofield](https://github.com/Michael-J-Scofield)<br />
 This project is MIT licensed.
 
 ---
